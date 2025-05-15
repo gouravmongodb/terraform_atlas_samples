@@ -1,0 +1,13 @@
+# Install Terraform in Mac
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+
+# Check terraform version
+terraform -version
+
+# Run a terraform script
+terraform init
+terraform plan -out
+terraform apply
+terraform show
+terraform destroy
