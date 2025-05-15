@@ -1,0 +1,46 @@
+Write a terraform script to demonstrate how to import the existing custom db roles onto the tf state/main tf file.
+
+ANSWER: Steps to import the existing custom role into the terraform.tfstate file:
+
+1. Terraform Resource Block (empty placeholder): In your .tf file (e.g., main.tf),
+define the mongodbatlas_custom_db_role resource block for the existing role without actual attributes yet:
+
+resource "mongodbatlas_custom_db_role" "migrate_role" {
+  project_id = var.project_id
+  role_name  = "migrateRole"
+}
+The role name must match the name in Atlas exactly — it's case-sensitive.
+
+2. Import the Role: Run the following import command:
+
+terraform import mongodbatlas_custom_db_role.migrate_role <project_id>-<role_name>
+Example:
+terraform import mongodbatlas_custom_db_role.migrate_role 65f617a6cdafb5108b9c6ef2-migrateRole
+
+3. Run terraform plan: Once the role is imported, run:
+
+terraform plan
+
+Terraform will show you a diff between what’s imported and what exists in your .tf file.
+If you haven’t filled in the full block yet, it may show changes — that’s expected.
+
+4. Run terraform show or terraform state show: Use this to inspect the imported role details.
+
+terraform state show mongodbatlas_custom_db_role.migrate_role
+
+This outputs the role’s full definition, including actions and resources.
+
+5. Copy State Info into your .tf File: Update your .tf file to match the imported role
+(e.g., bypassWriteBlockingMode@all databases(all collections)):
+
+resource "mongodbatlas_custom_db_role" "migrate_role" {
+  project_id = var.project_id
+  role_name  = "migrateRole"
+
+  actions {
+    action = "BYPASS_WRITE_BLOCKING_MODE"
+    resources {
+      cluster = true
+    }
+  }
+}

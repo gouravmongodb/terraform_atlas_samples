@@ -1,0 +1,16 @@
+# mongodbatlas_custom_db_role.migrate_role:
+resource "mongodbatlas_custom_db_role" "migrate_role" {
+    id         = "cHJvamVjdF9pZA==:NjVmNjE3YTZjZGFmYjUxMDhiOWM2ZWYy-cm9sZV9uYW1l:bWlncmF0ZVJvbGU="
+    project_id = "65f617a6cdafb5108b9c6ef2"
+    role_name  = "migrateRole"
+
+    actions {
+        action = "BYPASS_USER_WRITE_BLOCK"
+
+        resources {
+            cluster         = true
+            collection_name = [90mnull[0m[0m
+            database_name   = [90mnull[0m[0m
+        }
+    }
+}
