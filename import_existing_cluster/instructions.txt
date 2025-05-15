@@ -1,0 +1,74 @@
+You want to import an existing MongoDB Atlas cluster into Terraform, so Terraform can manage it without destroying or recreating it.
+
+Here’s a step-by-step guide for you:
+
+✅ Step 1: Write a Terraform config for the cluster
+First, create a Terraform configuration that matches the existing cluster.
+
+Example:
+
+provider "mongodbatlas" {
+  public_key  = var.atlas_public_key
+  private_key = var.atlas_private_key
+}
+
+resource "mongodbatlas_cluster" "existing_cluster" {
+  project_id = var.project_id
+  name       = "my-existing-cluster"
+
+  // Optional: You can fill out other fields, but it's okay to start minimal.
+}
+Make sure:
+
+The name exactly matches the existing cluster name in Atlas.
+The project_id matches the Atlas project.
+✅ Step 2: Run Terraform import
+Use the terraform import command to tell Terraform:
+
+“Hey, manage this already-existing resource under this Terraform resource block.”
+Command:
+
+terraform import mongodbatlas_cluster.existing_cluster <project_id>-<cluster_name>
+For example:
+
+terraform import mongodbatlas_cluster.existing_cluster 5e2211c17a3e5a6c7f3e1abc-my-existing-cluster
+✅ Step 3: Run terraform plan
+After import, run:
+
+terraform plan
+⚠ IMPORTANT:
+
+Terraform will show differences between your config file and the actual cluster.
+If your config file is empty or missing attributes, Terraform may try to “update” the cluster.
+Review the plan carefully.
+✅ Step 4: Align the config with the real cluster
+Add all the necessary fields to your Terraform config so that it matches the current state.
+Example: provider_backup_enabled, num_shards, replication_specs, etc.
+You can use:
+terraform show
+or
+
+terraform state show mongodbatlas_cluster.existing_cluster
+to see what’s currently imported.
+✅ Step 5: Apply and manage
+Once the config matches, run:
+
+terraform apply
+Now Terraform will only apply future changes, and you can safely manage the cluster as code.
+
+
+New tasks:
+1. Write a terraform script to make a new databases, when we have existing databases in a cluster.
+2. Do the sample scripts for both clouds - Azure and AWS.
+3. Demonstrate samples to create cluster with multi cloud (AWS and Azure).
+4. Write a sample terraform script to create custom Db roles.
+5. Write a terraform script to demonstrate how to import the existing custom db roles onto the tf state/main tf file.
+
+
+Ronda will send a set of new requirements/tasks to be done in Terraform via email by Monday (may 19, 2025)
+
+Ronda wants to have more time to work around with these sample terraform scripts and for this she wants to move the next wednesday meeting.
+Tentative confirm by monday, Next wed meeting - moved ahead, by 1 week.
+
+
+
